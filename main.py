@@ -158,20 +158,35 @@ async def scan(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
 
         for item in all_results[:8]:
-            lines.append(
-                f"السهم: {item['symbol']}\n"
-                f"النوع: {item['type']}\n"
-                f"العقد: {item['contract']}\n"
-                f"سعر التنفيذ: ${item['strike']:.2f}\n"
-                f"الانتهاء: {item['expiry']}\n"
-                f"Bid: ${item['bid']:.3f}\n"
-                f"Ask: ${item['ask']:.3f}\n"
-                f"تكلفة العقد: ${item['cost']:.2f}\n"
-                f"فارق السعر: {item['spread']:.1f}%\n"
-                f"حجم آخر صفقة: {item['volume']}\n"
-                f"عمر السعر: {item['age']:.1f} دقيقة\n"
-                "--------------------"
-            )
+    entry = item["ask"]
+    tp1 = entry * 1.20
+    tp2 = entry * 1.40
+    stop = entry * 0.80
+
+    cost_sar = entry * 100 * 3.75
+    profit1 = (tp1 - entry) * 100 * 3.75
+    profit2 = (tp2 - entry) * 100 * 3.75
+    loss = (entry - stop) * 100 * 3.75
+
+    lines.append(
+        f"السهم: {item['symbol']}\n"
+        f"الاتجاه: {item['type']}\n"
+        f"العقد: {item['contract']}\n"
+        f"سعر التنفيذ: ${item['strike']:.2f}\n"
+        f"الانتهاء: {item['expiry']}\n"
+        f"الدخول: ${entry:.3f}\n"
+        f"الهدف الأول: ${tp1:.3f}\n"
+        f"الهدف الثاني: ${tp2:.3f}\n"
+        f"وقف الخسارة: ${stop:.3f}\n"
+        f"تكلفة العقد: {cost_sar:.2f} ريال\n"
+        f"ربح الهدف الأول: {profit1:.2f} ريال\n"
+        f"ربح الهدف الثاني: {profit2:.2f} ريال\n"
+        f"الخسارة عند الوقف: {loss:.2f} ريال\n"
+        f"Bid: ${item['bid']:.3f}\n"
+        f"Ask: ${item['ask']:.3f}\n"
+        f"فارق السعر: {item['spread']:.1f}%\n"
+        "--------------------"
+    )
 
         lines.append(
             "\nهذه قائمة فحص وليست توصية شراء أو بيع. "
